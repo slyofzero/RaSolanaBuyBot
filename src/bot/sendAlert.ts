@@ -1,12 +1,8 @@
 import { errorHandler, log } from "@/utils/handlers";
 import { memoTokenData } from "@/vars/tokens";
-import { teleBot, trendingBuyAlertBots } from "..";
-import { TRENDING_CHANNEL_ID } from "@/utils/env";
-import { trendingTokens } from "@/vars/trending";
-import { getRandomItemFromArray } from "@/utils/general";
+import { teleBot } from "..";
 import { projectGroups } from "@/vars/projectGroups";
 import { cleanUpBotMessage, hardCleanUpBotMessage } from "@/utils/bot";
-import { toTrendTokens } from "@/vars/toTrend";
 
 export interface BuyData {
   buyer: string;
@@ -22,9 +18,8 @@ export async function sendAlert(data: BuyData) {
     const groups = projectGroups.filter(
       ({ token: groupToken }) => groupToken === token
     );
-    const isTrending = Object.keys(trendingTokens).includes(token);
     // console.log(isTrending, groups.length);
-    if (!isTrending && !groups.length) return;
+    if (!groups.length) return;
 
     // Preparing message for token
     const tokenData = memoTokenData[token];
@@ -42,10 +37,6 @@ export async function sendAlert(data: BuyData) {
     const randomizeEmojiCount = (min: number, max: number) =>
       Math.floor(Math.random() * (max - min + 1)) + min;
 
-    const toTrendToken = toTrendTokens.find(
-      ({ token: storedToken }) => storedToken === token
-    );
-
     let emojiCount = 0;
     if (sentUsdNumber <= 50) {
       emojiCount = randomizeEmojiCount(5, 10);
@@ -54,9 +45,6 @@ export async function sendAlert(data: BuyData) {
     } else {
       emojiCount = randomizeEmojiCount(35, 70);
     }
-    const emojis = `${toTrendToken ? toTrendToken.emoji : "🟢"}`.repeat(
-      emojiCount
-    );
 
     // links
     const buyerLink = `https://solscan.io/account/${buyer}`;
@@ -65,7 +53,9 @@ export async function sendAlert(data: BuyData) {
     const dexSLink = `https://dexscreener.com/solana/7fdjh3zyup8ri6j8nglcpcxqsak8d9vbpab7pvibg4d1/${token}`;
     const trendingLink = `https://t.me/c/2125443386/2`;
 
-    const message = `*${symbol} Buy*
+    const addEmojiToMessage = (emoji: string) => {
+      const emojis = emoji.repeat(emojiCount);
+      const message = `*${symbol} Buy*
 ${emojis}
 
 🔀 $${sentUsd} \\(${sentNative} SOL\\)
@@ -76,92 +66,29 @@ ${emojis}
 
 [DexT](${dexSLink}) \\| [Screener](${dexTLink}) \\| [Trending](${trendingLink})`;
 
+      return message;
+    };
+
     // Sending Message
-    if (isTrending) {
-      const trendingBuyAlertBot = getRandomItemFromArray(trendingBuyAlertBots);
-
-      try {
-        if (toTrendToken?.gif) {
-          await trendingBuyAlertBot.api.sendAnimation(
-            TRENDING_CHANNEL_ID || "",
-            toTrendToken.gif,
-            {
-              parse_mode: "MarkdownV2",
-              // @ts-expect-error Type not found
-              disable_web_page_preview: true,
-              caption: message,
-            }
-          );
-        } else {
-          await trendingBuyAlertBot.api.sendMessage(
-            TRENDING_CHANNEL_ID || "",
-            message,
-            {
-              parse_mode: "MarkdownV2",
-              // @ts-expect-error Type not found
-              disable_web_page_preview: true,
-            }
-          );
-        }
-      } catch (error) {
-        console.log(message);
-        errorHandler(error);
-      }
-    }
-
     for (const group of groups) {
-      return teleBot.api
-        .sendMessage(group.chatId, message)
-        .catch((e) => errorHandler(e));
+      const message = addEmojiToMessage(group?.emoji || "🟢");
+
+      if (group.gif) {
+        await teleBot.api.sendAnimation(group.chatId, group.gif, {
+          parse_mode: "MarkdownV2",
+          // @ts-expect-error Type not found
+          disable_web_page_preview: true,
+          caption: message,
+        });
+      } else {
+        await teleBot.api.sendMessage(group.chatId, message, {
+          parse_mode: "MarkdownV2",
+          // @ts-expect-error Type not found
+          disable_web_page_preview: true,
+        });
+      }
     }
   } catch (error) {
     errorHandler(error);
   }
 }
-
-// import { errorHandler, log } from "@/utils/handlers";
-// import { memoTokenData } from "@/vars/tokens";
-// import { teleBot, trendingBuyAlertBots } from "..";
-// import { TRENDING_CHANNEL_ID } from "@/utils/env";
-// import { trendingTokens } from "@/vars/trending";
-// import { getRandomItemFromArray } from "@/utils/general";
-// import { projectGroups } from "@/vars/projectGroups";
-
-// export interface BuyData {
-//   buyer: string;
-//   amount: number;
-//   token: string;
-//   change: number;
-//   signature: string;
-// }
-
-// export async function sendAlert(data: BuyData) {
-//   try {
-//     const { buyer, amount, token } = data;
-//     const tokenData = memoTokenData[token];
-//     const { symbol } = tokenData.baseToken;
-
-//     const groups = projectGroups.filter(
-//       ({ token: groupToken }) => groupToken === token
-//     );
-
-//     const isTrending = Object.keys(trendingTokens).includes(token);
-//     const message = `${buyer} bought ${amount} ${symbol}`;
-//     log(message);
-
-//     if (isTrending) {
-//       const trendingBuyAlertBot = getRandomItemFromArray(trendingBuyAlertBots);
-//       trendingBuyAlertBot.api
-//         .sendMessage(TRENDING_CHANNEL_ID || "", message)
-//         .catch((e) => errorHandler(e));
-//     }
-
-//     for (const group of groups) {
-//       return teleBot.api
-//         .sendMessage(group.chatId, message)
-//         .catch((e) => errorHandler(e));
-//     }
-//   } catch (error) {
-//     errorHandler(error);
-//   }
-// }
