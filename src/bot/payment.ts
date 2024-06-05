@@ -148,13 +148,12 @@ Address - \`${account}\``;
     } as StoredToTrend | StoredAdvertisement;
 
     if (isTrendingPayment) {
-      const { token, social, gif, emoji } = trendingState[chatId];
+      const { token, social, emoji } = trendingState[chatId];
       dataToAdd = {
         ...dataToAdd,
         // @ts-expect-error weird
         token: token || "",
         socials: social || "",
-        gif: gif || "",
         emoji: emoji || "",
       };
     } else {

@@ -4,7 +4,6 @@ export interface ToTrendUserState {
   duration?: number;
   slot?: number;
   emoji?: string;
-  gif?: string;
 }
 
 export interface AdvertisementUserState {

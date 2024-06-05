@@ -19,7 +19,7 @@ export async function startBot(ctx: BotCommandContextType) {
   try {
     const { match: token } = ctx;
     const { id: chatId, type } = ctx.chat;
-    let text = `*Welcome to ${BOT_USERNAME}!!!*\n\n`;
+    let text = `Welcome to ${BOT_USERNAME}!!!\n\n`;
 
     if (type === "private") {
       text += `What can this bot do?

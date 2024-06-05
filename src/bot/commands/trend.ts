@@ -126,33 +126,42 @@ export async function setTrendingGif(ctx: CommandContext<Context>) {
 export async function selectTrendingDuration(ctx: CommandContext<Context>) {
   try {
     const { id: chatId } = ctx.chat;
-
-    let gif = "";
-
     const callbackQuery = ctx.callbackQuery as unknown as
       | CallbackQuery
       | undefined;
+    const emoji = callbackQuery?.data ? "" : ctx.message?.text || "";
 
-    if (!callbackQuery?.data) {
-      const { message, channel_post } = ctx.update;
-      const { animation, video } = message || channel_post;
-      const videoSource = animation || video;
+    if (callbackQuery?.data) ctx.deleteMessage();
 
-      if (!videoSource)
-        return await ctx.reply("Please send a valid GIF or video");
-
-      const { file_id, mime_type } = videoSource;
-      gif = file_id;
-      const isValidMimeType =
-        mime_type?.includes("video") || mime_type?.includes("gif");
-      if (!isValidMimeType)
-        return await ctx.reply("Please send a valid GIF or video");
-    } else {
-      ctx.deleteMessage();
-    }
-
-    trendingState[chatId] = { ...trendingState[chatId], gif };
+    trendingState[chatId] = { ...trendingState[chatId], emoji };
     delete userState[chatId];
+
+    // let gif = "";
+
+    // const callbackQuery = ctx.callbackQuery as unknown as
+    //   | CallbackQuery
+    //   | undefined;
+
+    // if (!callbackQuery?.data) {
+    //   const { message, channel_post } = ctx.update;
+    //   const { animation, video } = message || channel_post;
+    //   const videoSource = animation || video;
+
+    //   if (!videoSource)
+    //     return await ctx.reply("Please send a valid GIF or video");
+
+    //   const { file_id, mime_type } = videoSource;
+    //   gif = file_id;
+    //   const isValidMimeType =
+    //     mime_type?.includes("video") || mime_type?.includes("gif");
+    //   if (!isValidMimeType)
+    //     return await ctx.reply("Please send a valid GIF or video");
+    // } else {
+    //   ctx.deleteMessage();
+    // }
+
+    // trendingState[chatId] = { ...trendingState[chatId], gif };
+    // delete userState[chatId];
 
     const text = "Select the duration you want your token to trend for.";
     let keyboard = new InlineKeyboard();
