@@ -24,7 +24,7 @@ export async function sendAlert(data: BuyData) {
     // Preparing message for token
     const tokenData = memoTokenData[token];
     const { symbol } = tokenData.baseToken;
-    const { priceNative, priceUsd, fdv } = tokenData;
+    const { priceNative, priceUsd, fdv, info } = tokenData;
     const sentUsdNumber = amount * Number(priceUsd);
     if (sentUsdNumber < 1) return;
     const sentNative = cleanUpBotMessage((amount * Number(priceNative)).toFixed(2)); // prettier-ignore
@@ -49,22 +49,30 @@ export async function sendAlert(data: BuyData) {
     // links
     const buyerLink = `https://solscan.io/account/${buyer}`;
     const txnLink = `https://solscan.io/tx/${signature}`;
-    const dexTLink = `https://www.dextools.io/app/en/solana/pair-explorer/${token}`;
     const dexSLink = `https://dexscreener.com/solana/7fdjh3zyup8ri6j8nglcpcxqsak8d9vbpab7pvibg4d1/${token}`;
     const trendingLink = `https://t.me/c/2125443386/2`;
+    const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
+
+    const telegramLink = info.socials.find(
+      ({ type }) => type.toLowerCase() === "telegram"
+    )?.url;
+
+    const specialLink = telegramLink
+      ? `[Telegram](${telegramLink})`
+      : `[Screener](${dexSLink})`;
 
     const addEmojiToMessage = (emoji: string) => {
       const emojis = emoji.repeat(emojiCount);
-      const message = `*${symbol} Buy*
+      const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*
 ${emojis}
 
-🔀 $${sentUsd} \\(${sentNative} SOL\\)
-🔀 ${formattedAmount} ${hardCleanUpBotMessage(symbol)}
-👤 [Buyer](${buyerLink}) / [TX](${txnLink}  )
+🔀 $${sentNative} SOL *\\($${sentUsd}\\)*
+🔀 ${formattedAmount} *${hardCleanUpBotMessage(symbol)}*
+👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 🪙 Position ${hardCleanUpBotMessage(position)}
-💸 Market Cap $${cleanUpBotMessage(fdv.toLocaleString("en"))}
+💸 [Market Cap $${cleanUpBotMessage(fdv.toLocaleString("en"))}](${dexSLink})
 
-[DexT](${dexSLink}) \\| [Screener](${dexTLink}) \\| [Trending](${trendingLink})`;
+[Photon](${photonLink}) \\| ${specialLink} \\| [Trending](${trendingLink})`;
 
       return message;
     };
