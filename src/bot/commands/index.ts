@@ -5,8 +5,6 @@ import { settings } from "./settings";
 import { setEmojiCommand } from "./setEmoji";
 import { stopBot } from "./stop";
 import { setGifCommand } from "./setGif";
-import { trend } from "./trend";
-import { advertise } from "./advertise";
 import { executeStep } from "../executeStep";
 import { userState } from "@/vars/state";
 
@@ -18,11 +16,6 @@ export function initiateBotCommands() {
       { command: "settings", description: "To customize the bot" },
       { command: "setemoji", description: "To set an emoji" },
       { command: "setgif", description: "To set a GIF" },
-      { command: "trend", description: "To purchase a trending spot" },
-      {
-        command: "advertise",
-        description: "To purchase an advertisement spot",
-      },
     ])
     .catch((e) => errorHandler(e));
 
@@ -30,8 +23,8 @@ export function initiateBotCommands() {
   teleBot.command("stop", (ctx) => stopBot(ctx));
   teleBot.command("settings", (ctx) => settings(ctx));
   teleBot.command("setemoji", (ctx) => setEmojiCommand(ctx));
-  teleBot.command("trend", (ctx) => trend(ctx));
-  teleBot.command("advertise", (ctx) => advertise(ctx));
+  // teleBot.command("trend", (ctx) => trend(ctx));
+  // teleBot.command("advertise", (ctx) => advertise(ctx));
 
   teleBot.hears(/\/setgif/, (ctx) => setGifCommand(ctx, true));
   teleBot.on(":animation", (ctx) => {
