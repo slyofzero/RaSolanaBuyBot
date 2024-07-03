@@ -53,7 +53,7 @@ export async function sendAlert(data: BuyData) {
     const trendingLink = `https://t.me/c/2125443386/2`;
     const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
 
-    const telegramLink = info.socials.find(
+    const telegramLink = info?.socials?.find(
       ({ type }) => type.toLowerCase() === "telegram"
     )?.url;
 

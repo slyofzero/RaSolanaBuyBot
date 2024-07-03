@@ -19,27 +19,30 @@ export async function setEmojiCommand(ctx: BotCommandContextType) {
     const isAdmin = await onlyAdmin(ctx);
     if (!isAdmin) return false;
 
+    const group = (
+      await getDocument<StoredGroup>({
+        collectionName: "project_groups",
+        queries: [["chatId", "==", String(chatId)]],
+      })
+    ).at(0);
+
+    if (!(group && group.id)) {
+      text = `Please do /start and set a token first for your ${type}, only then do /setgif.`;
+      return ctx.reply(text);
+    }
+
     if (!emoji) {
       text = "Missing emoji. To set it do - /setemoji <emoji>";
     } else {
-      const groups = (await getDocument({
+      await updateDocumentById({
+        id: group.id,
         collectionName: "project_groups",
-        queries: [["chatId", "==", String(chatId)]],
-      })) as StoredGroup[];
+        updates: { emoji: emoji },
+      });
 
-      for (const group of groups) {
-        if (group && group.id) {
-          await updateDocumentById({
-            id: group.id,
-            collectionName: "project_groups",
-            updates: { emoji: emoji },
-          });
-
-          log(`Set emoji ${emoji} for ${chatId}`);
-          syncProjectGroups();
-          text = `New emoji ${emoji} set`;
-        }
-      }
+      log(`Set emoji ${emoji} for ${chatId}`);
+      syncProjectGroups();
+      text = `New emoji ${emoji} set`;
     }
 
     ctx.reply(text);

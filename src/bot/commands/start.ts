@@ -112,7 +112,7 @@ type /settings`;
           await ctx.reply("The token address you passed was incorrect.");
         }
       } else {
-        text += `To start the buy, add \\@${BOT_USERNAME} as an admin \\(this allows the bot to send messages\\) and then do /start in the below format -\n/start \\<token address\\>.`;
+        text += `To start the buy, add \\@${BOT_USERNAME} as an admin \\(this allows the bot to send messages\\) and then do /start in the below format -\n/start _token address_.`;
         await ctx.reply(cleanUpBotMessage(text), { parse_mode: "MarkdownV2" });
       }
     }

@@ -23,11 +23,11 @@ export function initiateBotCommands() {
   teleBot.command("stop", (ctx) => stopBot(ctx));
   teleBot.command("settings", (ctx) => settings(ctx));
   teleBot.command("setemoji", (ctx) => setEmojiCommand(ctx));
+  teleBot.command("setgif", (ctx) => setGifCommand(ctx, true));
   // teleBot.command("trend", (ctx) => trend(ctx));
   // teleBot.command("advertise", (ctx) => advertise(ctx));
 
-  teleBot.hears(/\/setgif/, (ctx) => setGifCommand(ctx, true));
-  teleBot.on(":animation", (ctx) => {
+  teleBot.on([":animation", ":video", ":media"], (ctx) => {
     const chatId = ctx.chat.id;
     if (userState[chatId] === "setgif") {
       // @ts-expect-error CTX type invalid

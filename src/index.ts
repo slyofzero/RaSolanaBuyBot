@@ -8,11 +8,6 @@ import { cleanUpExpired } from "./bot/cleanup";
 import { unlockUnusedAccounts } from "./bot/cleanup/account";
 import { syncProjectGroups } from "./vars/projectGroups";
 
-// if (!PORT) {
-//   log("PORT is undefined");
-//   process.exit(1);
-// }
-
 if (!BOT_TOKEN) {
   stopScript("BOT_TOKEN is missing.");
 }
@@ -34,12 +29,4 @@ log("Bot instance ready");
 
   setInterval(unlockUnusedAccounts, 60 * 60 * 1e3);
   setInterval(cleanUpExpired, 60 * 1e3);
-
-  // app.use(express.json());
-
-  // app.get("/ping", (req, res) => res.send({ message: "Server up" }));
-
-  // app.listen(PORT, () => {
-  //   log(`Server is running on port ${PORT}`);
-  // });
 })();

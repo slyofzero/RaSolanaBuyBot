@@ -61,7 +61,6 @@ export function setUpWSS(pairs: string[]) {
 
   currentWSS.on("close", (code, reason) => {
     log(`Disconnected: ${code} - ${reason}`);
-    process.exit(1);
     // // Attempt to reconnect after a delay
     // setTimeout(() => {
     //   log("Reconnecting...");

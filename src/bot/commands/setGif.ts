@@ -1,13 +1,13 @@
 import { getDocument, updateDocumentById } from "@/firebase";
 import { StoredGroup } from "@/types";
 import { errorHandler, log } from "@/utils/handlers";
-import { Context, HearsContext } from "grammy";
+import { CommandContext, Context } from "grammy";
 import { userState } from "@/vars/state";
 import { onlyAdmin } from "../utils";
 import { syncProjectGroups } from "@/vars/projectGroups";
 
 export async function setGifCommand(
-  ctx: HearsContext<Context>,
+  ctx: CommandContext<Context>,
   commandCall?: boolean
 ) {
   try {
@@ -26,6 +26,18 @@ export async function setGifCommand(
     const isAdmin = await onlyAdmin(ctx);
     if (!isAdmin) return false;
 
+    const group = (
+      await getDocument<StoredGroup>({
+        collectionName: "project_groups",
+        queries: [["chatId", "==", String(chatId)]],
+      })
+    ).at(0);
+
+    if (!(group && group.id)) {
+      text = `Please do /start and set a token first for your ${type}, only then do /setgif.`;
+      return ctx.reply(text);
+    }
+
     const userStateValue = userState[chatId];
 
     if (userStateValue === "setgif") {
@@ -35,29 +47,19 @@ export async function setGifCommand(
           mime_type?.includes("video") || mime_type?.includes("gif");
 
         if (isValidMimeType) {
-          const groups =
-            ((await getDocument({
-              collectionName: "project_groups",
-              queries: [["chatId", "==", String(chatId)]],
-            })) as StoredGroup[]) || undefined;
-
-          for (const group of groups) {
-            if (group && group.id) {
-              await updateDocumentById({
-                id: group.id,
-                collectionName: "project_groups",
-                updates: { gif: gif },
-              });
-              log(`Set GIF added ${gif} for ${chatId}`);
-              syncProjectGroups();
-              text = `New GIF set`;
-            }
-          }
+          await updateDocumentById({
+            id: group.id,
+            collectionName: "project_groups",
+            updates: { gif: gif },
+          });
+          log(`Set GIF added ${gif} for ${chatId}`);
+          syncProjectGroups();
+          text = `New GIF set`;
         } else {
           text = "Invalid GIF, try some other one";
         }
       } else {
-        text = "Invalid GIF, try some other one";
+        text = "Please do /setgif again";
       }
 
       delete userState[chatId];
