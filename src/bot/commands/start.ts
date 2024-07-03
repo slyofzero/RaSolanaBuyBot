@@ -4,8 +4,6 @@ import { cleanUpBotMessage } from "@/utils/bot";
 import { BOT_USERNAME, WEBHOOK_URL } from "@/utils/env";
 import { onlyAdmin } from "../utils";
 import { syncProjectGroups } from "@/vars/projectGroups";
-import { trend } from "./trend";
-import { advertise } from "./advertise";
 import { errorHandler, log } from "@/utils/handlers";
 import web3 from "@solana/web3.js";
 import { apiFetcher } from "@/utils/api";
@@ -29,33 +27,20 @@ export async function startBot(ctx: BotCommandContextType) {
 ◦ /start : To start the buybot
 ◦ /settings : Opens the menu to add a token, gif, telegram group link and adjust any available settings for the buy bot`;
 
-      const { match } = ctx;
-
-      switch (match) {
-        case "trend": {
-          trend(ctx);
-          break;
-        }
-        case "adBuyRequest": {
-          advertise(ctx);
-          break;
-        }
-        default: {
-          return await ctx.reply(text, {
-            // @ts-expect-error Type not found
-            disable_web_page_preview: true,
-          });
-        }
-      }
+      return await ctx.reply(text, {
+        // @ts-expect-error Type not found
+        disable_web_page_preview: true,
+      });
     } else {
       const isAdmin = await onlyAdmin(ctx);
+      const admin = ctx.update.message?.from.id;
       if (!isAdmin) return false;
+      if (!admin) return ctx.reply("Please do /start again");
 
       if (token) {
         text = `This ${type} would now get updates for \`${token}\` buys. Each time the bot detects a buy for your token, a message would be sent in this group with some data about it.
 
-To configure buybot;
-type /settings`;
+To configure your buybot go to @${BOT_USERNAME} and do /settings.`;
 
         try {
           new web3.PublicKey(token);
@@ -83,11 +68,15 @@ type /settings`;
           ).at(0);
 
           if (projectData) {
+            const { admins } = projectData;
+            const newAdmins = !admins.includes(admin)
+              ? [...admins, admin]
+              : admins;
             await ctx.reply(cleanUpBotMessage(text), {
               parse_mode: "MarkdownV2",
             });
             await updateDocumentById<StoredGroup>({
-              updates: { token, pairs },
+              updates: { token, pairs, admins: newAdmins },
               collectionName: "project_groups",
               id: projectData.id || "",
             });
@@ -99,6 +88,7 @@ type /settings`;
               chatId: String(chatId),
               token,
               pairs,
+              admins: [admin],
             };
             await addDocument<StoredGroup>({
               data,

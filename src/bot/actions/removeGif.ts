@@ -22,7 +22,7 @@ export async function removeGifCallback(ctx: BotCallbackContextType) {
 
     if (group && group.id) {
       let text = "";
-      if (group.gif) {
+      if (group.media) {
         await updateDocumentById({
           id: group.id,
           collectionName: "project_groups",

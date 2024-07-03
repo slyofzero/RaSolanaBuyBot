@@ -1,13 +1,16 @@
 import { BotCommandContextType } from "@/types";
-import { InlineKeyboard } from "grammy";
 import { onlyAdmin } from "../utils";
+import { BOT_USERNAME } from "@/utils/env";
 
 export async function settings(ctx: BotCommandContextType) {
   const { type } = ctx.chat;
 
   let text = "";
   if (type === "private") {
-    text = "Only works in groups or channels";
+    text = `Once you have started the buybot to any of your channels/group, you will be able to set emojis and gifs for the buys in this bot chat.
+    
+/setmedia - To set gif
+/setemoji - To set emoji`;
     ctx.reply(text);
     return false;
   }
@@ -15,14 +18,7 @@ export async function settings(ctx: BotCommandContextType) {
   const isAdmin = await onlyAdmin(ctx);
   if (!isAdmin) return false;
 
-  text =
-    "Customize your bot here. You can customize the message the bot would send to fit your project.";
-  const keyboard = new InlineKeyboard()
-    .text("Set emoji", "set-emoji")
-    .text("Set GIF", "set-gif")
-    .row()
-    .text("Remove emoji", "remove-emoji")
-    .text("Remove GIF", "remove-gif");
+  text = `Please go to @${BOT_USERNAME} and do /settings in the bot messages.`;
 
-  ctx.reply(text, { reply_markup: keyboard });
+  ctx.reply(text);
 }

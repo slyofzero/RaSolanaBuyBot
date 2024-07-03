@@ -1,35 +1,15 @@
 import { CallbackQueryContext, CommandContext, Context } from "grammy";
-import {
-  addTrendingSocial,
-  prepareTrendingState,
-  selectTrendingDuration,
-  setTrendingEmoji,
-} from "./commands/trend";
 import { userState } from "@/vars/state";
-import { confirmPayment, preparePayment } from "./payment";
-import {
-  advertiseLink,
-  prepareAdvertisementState,
-  selectAdDuration,
-} from "./commands/advertise";
 import { log } from "@/utils/handlers";
+import { setEmoji, setEmojiFinal } from "./commands/setEmoji";
+import { setMedia, setMediaFinal } from "./commands/setMedia";
 
 const steps: { [key: string]: any } = {
-  toTrend: addTrendingSocial,
-  trendSocials: setTrendingEmoji,
-  trendEmoji: selectTrendingDuration,
-  // trendGif: selectTrendingDuration,
-  trendDuration: prepareTrendingState,
-  trendingPayment: confirmPayment,
+  setEmoji,
+  setEmojiFinal,
 
-  defaultEmoji: selectTrendingDuration,
-  // defaultGif: selectTrendingDuration,
-
-  advertiseText: advertiseLink,
-  advertiseLink: selectAdDuration,
-  adDuration: prepareAdvertisementState,
-  adSlot: preparePayment,
-  adPayment: confirmPayment,
+  setMedia,
+  setMediaFinal,
 };
 
 export async function executeStep(

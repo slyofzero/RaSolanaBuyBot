@@ -2,7 +2,11 @@ import { errorHandler, log } from "@/utils/handlers";
 import { memoTokenData } from "@/vars/tokens";
 import { teleBot } from "..";
 import { projectGroups } from "@/vars/projectGroups";
-import { cleanUpBotMessage, hardCleanUpBotMessage } from "@/utils/bot";
+import {
+  botRemovedError,
+  cleanUpBotMessage,
+  hardCleanUpBotMessage,
+} from "@/utils/bot";
 
 export interface BuyData {
   buyer: string;
@@ -79,21 +83,36 @@ ${emojis}
 
     // Sending Message
     for (const group of groups) {
-      const message = addEmojiToMessage(group?.emoji || "🟢");
+      const { emoji, mediaType } = group;
+      const message = addEmojiToMessage(emoji || "🟢");
 
-      if (group.gif) {
-        await teleBot.api.sendAnimation(group.chatId, group.gif, {
-          parse_mode: "MarkdownV2",
-          // @ts-expect-error Type not found
-          disable_web_page_preview: true,
-          caption: message,
-        });
-      } else {
-        await teleBot.api.sendMessage(group.chatId, message, {
-          parse_mode: "MarkdownV2",
-          // @ts-expect-error Type not found
-          disable_web_page_preview: true,
-        });
+      try {
+        if (group.media) {
+          if (mediaType === "gif") {
+            await teleBot.api.sendAnimation(group.chatId, group.media, {
+              parse_mode: "MarkdownV2",
+              // @ts-expect-error Type not found
+              disable_web_page_preview: true,
+              caption: message,
+            });
+          } else {
+            await teleBot.api.sendPhoto(group.chatId, group.media, {
+              parse_mode: "MarkdownV2",
+              // @ts-expect-error Type not found
+              disable_web_page_preview: true,
+              caption: message,
+            });
+          }
+        } else {
+          await teleBot.api.sendMessage(group.chatId, message, {
+            parse_mode: "MarkdownV2",
+            // @ts-expect-error Type not found
+            disable_web_page_preview: true,
+          });
+        }
+      } catch (error) {
+        errorHandler(error);
+        botRemovedError(error, group.chatId);
       }
     }
   } catch (error) {
