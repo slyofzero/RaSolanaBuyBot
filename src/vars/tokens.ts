@@ -1,6 +1,8 @@
 import { PairData, PairsData } from "@/types";
 import { apiFetcher } from "@/utils/api";
 import { log } from "@/utils/handlers";
+import { sleep } from "@/utils/time";
+import { projectGroups } from "./projectGroups";
 
 export const memoTokenData: { [key: string]: PairData } = {};
 export let pairsToWatch: string[] = [];
@@ -31,4 +33,7 @@ export async function memoizeTokenData(tokens: string[]) {
     ({ pairAddress }) => pairAddress
   );
   setPairsToWatch(newPairsToWatch);
+
+  await sleep(60 * 1e3);
+  memoizeTokenData(projectGroups.map(({ token }) => token));
 }

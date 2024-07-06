@@ -6,7 +6,8 @@ import { syncAdvertisements } from "./vars/advertisements";
 import { rpcConfig } from "./rpc/config";
 import { cleanUpExpired } from "./bot/cleanup";
 import { unlockUnusedAccounts } from "./bot/cleanup/account";
-import { syncProjectGroups } from "./vars/projectGroups";
+import { projectGroups, syncProjectGroups } from "./vars/projectGroups";
+import { memoizeTokenData } from "./vars/tokens";
 
 if (!BOT_TOKEN) {
   stopScript("BOT_TOKEN is missing.");
@@ -25,6 +26,7 @@ log("Bot instance ready");
   initiateBotCommands();
   initiateCallbackQueries();
 
+  await memoizeTokenData(projectGroups.map(({ token }) => token));
   await Promise.all([syncAdvertisements(), syncProjectGroups()]);
 
   setInterval(unlockUnusedAccounts, 60 * 60 * 1e3);
