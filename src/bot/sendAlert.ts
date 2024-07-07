@@ -7,6 +7,8 @@ import {
   cleanUpBotMessage,
   hardCleanUpBotMessage,
 } from "@/utils/bot";
+import { trendingTokens } from "@/vars/trending";
+import { TRENDING_MSG } from "@/utils/env";
 
 export interface BuyData {
   buyer: string;
@@ -56,6 +58,9 @@ export async function sendAlert(data: BuyData) {
     const dexSLink = `https://dexscreener.com/solana/7fdjh3zyup8ri6j8nglcpcxqsak8d9vbpab7pvibg4d1/${token}`;
     const trendingLink = `https://t.me/c/2125443386/2`;
     const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
+    const trendingRank = Object.entries(trendingTokens).findIndex(
+      ([trendingToken]) => trendingToken === token
+    );
 
     const telegramLink = info?.socials?.find(
       ({ type }) => type.toLowerCase() === "telegram"
@@ -67,6 +72,11 @@ export async function sendAlert(data: BuyData) {
 
     const addEmojiToMessage = (emoji: string) => {
       const emojis = emoji.repeat(emojiCount);
+      const trendingPosition =
+        trendingRank !== -1
+          ? `[HypeTrending \\#${trendingRank}](${TRENDING_MSG})`
+          : "";
+
       const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*
 ${emojis}
 
@@ -76,7 +86,9 @@ ${emojis}
 🪙 Position ${hardCleanUpBotMessage(position)}
 💸 [Market Cap $${cleanUpBotMessage(fdv.toLocaleString("en"))}](${dexSLink})
 
-[Photon](${photonLink}) \\| ${specialLink} \\| [Trending](${trendingLink})`;
+[Photon](${photonLink}) \\| ${specialLink} \\| [Trending](${trendingLink})
+
+${trendingPosition}`;
 
       return message;
     };
