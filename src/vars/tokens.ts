@@ -34,6 +34,6 @@ export async function memoizeTokenData(tokens: string[]) {
   );
   setPairsToWatch(newPairsToWatch);
 
-  await sleep(60 * 1e3);
+  await sleep(30 * 1e3);
   memoizeTokenData(projectGroups.map(({ token }) => token));
 }
