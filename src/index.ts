@@ -37,9 +37,9 @@ log("Bot instance ready");
   // Recurse functions
   setInterval(
     async () => await memoizeTokenData(projectGroups.map(({ token }) => token)),
-    15 * 1e3
+    7 * 1e3
   );
-  setInterval(async () => await syncTrendingTokens(), 15 * 1e3);
+  setInterval(async () => await syncTrendingTokens(), 60 * 1e3);
 
   setInterval(unlockUnusedAccounts, 60 * 60 * 1e3);
   setInterval(cleanUpExpired, 60 * 1e3);
