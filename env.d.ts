@@ -14,9 +14,9 @@ declare global {
       DEX_URL: string | undefined;
       GECKO_API: string | undefined;
       TRENDING_TOKENS_API: string | undefined;
-      TRENDING_MSG: string | undefined;
       TRENDING_AUTH_KEY: string | undefined;
       TRENDING_CHANNEL_ID: string | undefined;
+      TRENDING_CHANNEL: string | undefined;
       PORT: string | undefined;
       COINGECKO_API_KEY: string | undefined;
       MAIN_ADDRESS: string | undefined;

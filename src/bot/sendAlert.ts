@@ -8,7 +8,7 @@ import {
   hardCleanUpBotMessage,
 } from "@/utils/bot";
 import { trendingTokens } from "@/vars/trending";
-import { TRENDING_MSG } from "@/utils/env";
+import { TRENDING_CHANNEL } from "@/utils/env";
 
 export interface BuyData {
   buyer: string;
@@ -74,7 +74,7 @@ export async function sendAlert(data: BuyData) {
       const emojis = emoji.repeat(emojiCount);
       const trendingPosition =
         trendingRank !== -1
-          ? `[HypeTrending \\#${trendingRank}](${TRENDING_MSG})`
+          ? `[HypeTrending \\#${trendingRank}](${TRENDING_CHANNEL})`
           : "";
 
       const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*

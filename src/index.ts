@@ -9,6 +9,7 @@ import { unlockUnusedAccounts } from "./bot/cleanup/account";
 import { projectGroups, syncProjectGroups } from "./vars/projectGroups";
 import { memoizeTokenData } from "./vars/tokens";
 import { syncTrendingTokens } from "./vars/trending";
+import { syncTrendingMessageId } from "./vars/message";
 
 if (!BOT_TOKEN) {
   stopScript("BOT_TOKEN is missing.");
@@ -32,6 +33,7 @@ log("Bot instance ready");
     syncAdvertisements(),
     syncProjectGroups(),
     syncTrendingTokens(),
+    syncTrendingMessageId(),
   ]);
 
   // Recurse functions
@@ -39,7 +41,11 @@ log("Bot instance ready");
     async () => await memoizeTokenData(projectGroups.map(({ token }) => token)),
     7 * 1e3
   );
-  setInterval(async () => await syncTrendingTokens(), 60 * 1e3);
+  setInterval(
+    async () =>
+      await Promise.all([syncTrendingTokens(), syncTrendingMessageId()]),
+    60 * 1e3
+  );
 
   setInterval(unlockUnusedAccounts, 60 * 60 * 1e3);
   setInterval(cleanUpExpired, 60 * 1e3);
