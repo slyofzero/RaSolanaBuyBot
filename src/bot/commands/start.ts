@@ -1,7 +1,7 @@
 import { addDocument, getDocument, updateDocumentById } from "@/firebase";
 import { BotCommandContextType, StoredGroup } from "@/types";
 import { cleanUpBotMessage } from "@/utils/bot";
-import { BOT_USERNAME, WEBHOOK_URL } from "@/utils/env";
+import { BOT_USERNAME } from "@/utils/env";
 import { onlyAdmin } from "../utils";
 import { syncProjectGroups } from "@/vars/projectGroups";
 import { errorHandler, log } from "@/utils/handlers";
@@ -10,10 +10,6 @@ import { apiFetcher } from "@/utils/api";
 import { TokenData } from "@/types/token";
 
 export async function startBot(ctx: BotCommandContextType) {
-  if (!WEBHOOK_URL) {
-    return log(`WEBHOOK_URL is undefined`);
-  }
-
   try {
     const { match: token } = ctx;
     const { id: chatId, type } = ctx.chat;
