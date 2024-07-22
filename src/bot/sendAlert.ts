@@ -80,10 +80,10 @@ export async function sendAlert(data: BuyData) {
       const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*
 ${emojis}
 
-🔀 $${sentNative} SOL *\\($${sentUsd}\\)*
+🔀 ${sentNative} SOL *\\($${sentUsd}\\)*
 🔀 ${formattedAmount} *${hardCleanUpBotMessage(symbol)}*
-👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 🪙 Position ${hardCleanUpBotMessage(position)}
+👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 💸 [Market Cap $${cleanUpBotMessage(fdv.toLocaleString("en"))}](${dexSLink})
 
 [Photon](${photonLink}) \\| ${specialLink} \\| [Trending](${trendingLink})
