@@ -15,6 +15,7 @@ export const {
   TRENDING_AUTH_KEY,
   TRENDING_CHANNEL,
   TRENDING_TOKENS_API,
+  GYSER_WSS_URL,
 } = process.env;
 
 export const TRENDING_BOT_TOKENS: string[] = JSON.parse(

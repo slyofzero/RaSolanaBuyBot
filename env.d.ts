@@ -10,6 +10,7 @@ declare global {
       PORT: string | undefined;
       ENCRYPTION_KEY: string | undefined;
       FIREBASE_KEY: string | undefined;
+      GYSER_WSS_URL: string | undefined;
     }
   }
 }

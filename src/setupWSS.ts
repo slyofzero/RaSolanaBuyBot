@@ -1,13 +1,12 @@
 import WebSocket from "ws";
 import { errorHandler, log } from "./utils/handlers";
 import { parseTxn } from "./parseTxn";
+import { GYSER_WSS_URL } from "./utils/env";
 
 export let currentWSS: WebSocket | null = null;
 
 export function setUpWSS(pairs: string[]) {
-  currentWSS = new WebSocket(
-    "wss://atlas-mainnet.helius-rpc.com/?api-key=224786e4-f3e6-4a4b-bab2-f903872b1595"
-  );
+  currentWSS = new WebSocket(GYSER_WSS_URL || "");
 
   function sendRequest(ws: WebSocket) {
     const request = {
