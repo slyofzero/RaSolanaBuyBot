@@ -3,6 +3,7 @@ import { TRENDING_AUTH_KEY, TRENDING_TOKENS_API } from "@/utils/env";
 
 export let trendingMessageId: number = 0;
 export async function syncTrendingMessageId() {
+  console.log(`${TRENDING_TOKENS_API}/getLastMessage`);
   const { messageId } = (
     await apiFetcher(`${TRENDING_TOKENS_API}/getLastMessage`, {
       Authorization: TRENDING_AUTH_KEY || "",
