@@ -40,9 +40,17 @@ const steps: { [key: string]: any } = {
   setTwitter,
 };
 
+const requestIds: { [key: number]: any } = {
+  0: () => null,
+  7: inputTokenAddress,
+};
+
 export async function executeStep(
   ctx: CommandContext<Context> | CallbackQueryContext<Context>
 ) {
+  const request_id = ctx.update.message?.chat_shared?.request_id || 0;
+  requestIds[request_id](ctx);
+
   const chatId = ctx.chat?.id;
   if (!chatId) return ctx.reply("Please redo your action");
 

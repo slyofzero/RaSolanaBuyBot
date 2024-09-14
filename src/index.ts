@@ -39,7 +39,7 @@ log("Bot instance ready");
   // Recurse functions
   setInterval(
     async () => await memoizeTokenData(projectGroups.map(({ token }) => token)),
-    7 * 1e3
+    30 * 1e3
   );
   setInterval(
     async () =>

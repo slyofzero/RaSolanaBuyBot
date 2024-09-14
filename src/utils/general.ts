@@ -55,3 +55,7 @@ export function isValidInviteLink(url: string) {
 export function isValidTwitterLink(url: string) {
   return url.startsWith("https://x.com") && isValidUrl(url);
 }
+
+export function getRandomNumber(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}

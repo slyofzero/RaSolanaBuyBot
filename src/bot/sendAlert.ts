@@ -9,6 +9,9 @@ import {
 } from "@/utils/bot";
 import { trendingTokens } from "@/vars/trending";
 import { TRENDING_CHANNEL } from "@/utils/env";
+import { trendingIcons } from "@/utils/constants";
+import { getRandomNumber } from "@/utils/general";
+import { StoredGroup } from "@/types";
 
 export interface BuyData {
   buyer: string;
@@ -30,7 +33,7 @@ export async function sendAlert(data: BuyData) {
     // Preparing message for token
     const tokenData = memoTokenData[token];
     const { symbol } = tokenData.baseToken;
-    const { priceNative, priceUsd, fdv, info } = tokenData;
+    const { priceNative, priceUsd, fdv } = tokenData;
     const sentUsdNumber = amount * Number(priceUsd);
     if (sentUsdNumber < 1) return;
     const sentNative = cleanUpBotMessage((amount * Number(priceNative)).toFixed(2)); // prettier-ignore
@@ -52,6 +55,16 @@ export async function sendAlert(data: BuyData) {
       emojiCount = randomizeEmojiCount(35, 70);
     }
 
+    const displayFdv = fdv
+      ? Number(
+          (
+            Number(fdv) +
+            sentUsdNumber +
+            sentUsdNumber * getRandomNumber(0, 2)
+          ).toFixed(2)
+        ).toLocaleString("en")
+      : 0;
+
     // links
     const buyerLink = `https://solscan.io/account/${buyer}`;
     const txnLink = `https://solscan.io/tx/${signature}`;
@@ -62,19 +75,26 @@ export async function sendAlert(data: BuyData) {
       ([trendingToken]) => trendingToken === token
     );
 
-    const telegramLink = info?.socials?.find(
-      ({ type }) => type.toLowerCase() === "telegram"
-    )?.url;
+    const updateMessageForGroup = (group: StoredGroup) => {
+      const { emoji, websiteLink, telegramLink, twitterLink } = group;
+      const emojis = emoji?.repeat(emojiCount);
 
-    const specialLink = telegramLink
-      ? `[Telegram](${telegramLink})`
-      : `[Screener](${dexSLink})`;
+      const links = {
+        Website: websiteLink,
+        Telegram: telegramLink,
+        Twitter: twitterLink,
+      };
 
-    const addEmojiToMessage = (emoji: string) => {
-      const emojis = emoji.repeat(emojiCount);
+      const specialLinks = Object.entries(links)
+        .filter(([, link]) => link)
+        .map(([label, link]) => `[${label}](${link})`)
+        .join(" \\| ");
+
       const trendingPosition =
         trendingRank !== -1
-          ? `[HypeTrending \\#${trendingRank}](${TRENDING_CHANNEL})`
+          ? `[${trendingIcons[trendingRank]} \\#${
+              trendingRank + 1
+            } on Tron Trending](${TRENDING_CHANNEL})`
           : "";
 
       const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*
@@ -84,9 +104,9 @@ ${emojis}
 🔀 ${formattedAmount} *${hardCleanUpBotMessage(symbol)}*
 🪙 Position ${hardCleanUpBotMessage(position)}
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
-💸 [Market Cap $${cleanUpBotMessage(fdv.toLocaleString("en"))}](${dexSLink})
+💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(displayFdv)}
 
-[Photon](${photonLink}) \\| ${specialLink} \\| [Trending](${trendingLink})
+[Photon](${photonLink}) \\| ${specialLinks} \\| [Trending](${trendingLink})
 
 ${trendingPosition}`;
 
@@ -95,8 +115,9 @@ ${trendingPosition}`;
 
     // Sending Message
     for (const group of groups) {
-      const { emoji, mediaType } = group;
-      const message = addEmojiToMessage(emoji || "🟢");
+      const { mediaType, minBuy } = group;
+      if (sentUsd < Number(minBuy)) continue;
+      const message = updateMessageForGroup(group);
 
       try {
         if (group.media) {

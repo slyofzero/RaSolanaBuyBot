@@ -1,16 +1,12 @@
-import { BotCommandContextType } from "@/types";
-import { onlyAdmin } from "../utils";
+import { onlyAdmin } from "@/utils/bot";
 import { BOT_USERNAME } from "@/utils/env";
+import { CommandContext, Context, InlineKeyboard } from "grammy";
 
-export async function settings(ctx: BotCommandContextType) {
-  const { type } = ctx.chat;
+export async function settings(ctx: CommandContext<Context>) {
+  const { type, id } = ctx.chat;
 
-  let text = "";
   if (type === "private") {
-    text = `Once you have started the buybot to any of your channels/group, you will be able to set emojis and gifs for the buys in this bot chat.
-    
-/setmedia - To set gif
-/setemoji - To set emoji`;
+    const text = "Only works in groups or channels";
     ctx.reply(text);
     return false;
   }
@@ -18,7 +14,12 @@ export async function settings(ctx: BotCommandContextType) {
   const isAdmin = await onlyAdmin(ctx);
   if (!isAdmin) return false;
 
-  text = `Please go to @${BOT_USERNAME} and do /settings in the bot messages.`;
+  const text =
+    "Customize your bot here. You can customize the message the bot would send to fit your project. Click below to continue in private chat.";
+  const keyboard = new InlineKeyboard().url(
+    "Continue in private chat",
+    `https://t.me/${BOT_USERNAME}?start=settings_${id}`
+  );
 
-  ctx.reply(text);
+  ctx.reply(text, { reply_markup: keyboard });
 }

@@ -4,6 +4,7 @@ import { log, errorHandler } from "@/utils/handlers";
 import { settings } from "./settings";
 import { stopBot } from "./stop";
 import { executeStep } from "../executeStep";
+import { setUpBot } from "./setUp";
 
 export function initiateBotCommands() {
   teleBot.api
@@ -18,6 +19,7 @@ export function initiateBotCommands() {
   teleBot.command("start", (ctx) => startBot(ctx));
   teleBot.command("stop", (ctx) => stopBot(ctx));
   teleBot.command("settings", (ctx) => settings(ctx));
+  teleBot.command("setup", (ctx) => setUpBot(ctx));
 
   // @ts-expect-error CTX type invalid
   teleBot.on(["message"], (ctx) => executeStep(ctx));
