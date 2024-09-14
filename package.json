@@ -37,7 +37,7 @@
     "ethers": "5.7",
     "express": "^4.19.2",
     "firebase-admin": "^12.0.0",
-    "grammy": "^1.22.4",
+    "grammy": "^1.30.0",
     "grammy-middlewares": "^1.0.11",
     "moment": "^2.29.4",
     "nanoid": "3",

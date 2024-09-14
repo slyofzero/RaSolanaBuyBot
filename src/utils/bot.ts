@@ -1,6 +1,5 @@
 import { projectGroups, syncProjectGroups } from "@/vars/projectGroups";
-import { InlineKeyboard } from "grammy";
-import { teleBot } from "..";
+import { Context } from "grammy";
 import { errorHandler, log } from "./handlers";
 import { removeDocumentById } from "@/firebase";
 
@@ -35,31 +34,6 @@ export function hardCleanUpBotMessage(text: any) {
   return text;
 }
 
-export async function getUserGroups(chatId: number, purpose: string) {
-  const userProjectGroups = projectGroups.filter(({ admins }) =>
-    admins.includes(chatId)
-  );
-
-  let keyboard = new InlineKeyboard();
-
-  if (userProjectGroups.length > 0) {
-    for (const projectGroup of userProjectGroups) {
-      const { chatId: projectChatId } = projectGroup;
-      try {
-        const projectData = await teleBot.api.getChat(projectChatId);
-        // @ts-expect-error weird stuff
-        const projectName = projectData.title;
-
-        keyboard = keyboard.text(projectName, `${purpose}-${projectChatId}`);
-      } catch (error) {
-        errorHandler(error);
-      }
-    }
-  }
-
-  return keyboard;
-}
-
 export function botRemovedError(e: any, chatId: string) {
   const err = e as Error;
 
@@ -71,7 +45,7 @@ export function botRemovedError(e: any, chatId: string) {
     err.message.includes("is not a member")
   ) {
     const projectGroup = projectGroups.find(
-      ({ chatId: storedChatId }) => storedChatId === chatId
+      ({ chatId: storedChatId }) => storedChatId === String(chatId)
     );
     removeDocumentById({
       collectionName: "project_groups",
@@ -81,4 +55,29 @@ export function botRemovedError(e: any, chatId: string) {
     log(err.message);
   }
   errorHandler(e);
+}
+
+export async function onlyAdmin(ctx: Context) {
+  if (!ctx.chat) {
+    return;
+  }
+  // Channels and private chats are only postable by admins
+  if (["channel", "private"].includes(ctx.chat.type)) {
+    return true;
+  }
+  // Anonymous users are always admins
+  if (ctx.from?.username === "GroupAnonymousBot") {
+    return true;
+  }
+  // Surely not an admin
+  if (!ctx.from?.id) {
+    return;
+  }
+  // Check the member status
+  const chatMember = await ctx.getChatMember(ctx.from.id);
+  if (["creator", "administrator"].includes(chatMember.status)) {
+    return true;
+  }
+  // Not an admin
+  return false;
 }

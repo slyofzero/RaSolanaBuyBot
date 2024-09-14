@@ -1,15 +1,43 @@
 import { CallbackQueryContext, CommandContext, Context } from "grammy";
 import { userState } from "@/vars/state";
 import { log } from "@/utils/handlers";
-import { setEmoji, setEmojiFinal } from "./commands/setEmoji";
-import { setMedia, setMediaFinal } from "./commands/setMedia";
+import { removeEmoji, removeEmojiCallback } from "./removeEmoji";
+import { removeMedia, removeMediaCallback } from "./removeMedia";
+import { inputTokenAddress, setTokenAddress } from "./actions/setUp";
+import { inputMinBuy, setMinBuy } from "./actions/setMinBuy";
+import { inputEmoji, setEmoji } from "./actions/setEmoji";
+import { inputWebsite, setWebsite } from "./actions/setWebsite";
+import { inputTelegram, setTelegram } from "./actions/setTelegram";
+import { inputTwitter, setTwitter } from "./actions/setTwitter";
+import { inputMedia, setMedia } from "./actions/setMedia";
 
 const steps: { [key: string]: any } = {
-  setEmoji,
-  setEmojiFinal,
+  removeEmoji: removeEmojiCallback,
+  userRemoveEmoji: removeEmoji,
 
+  removeMedia: removeMediaCallback,
+  userRemoveMedia: removeMedia,
+
+  inputTokenAddress,
+  setTokenAddress,
+
+  inputMedia,
   setMedia,
-  setMediaFinal,
+
+  inputMinBuy,
+  setMinBuy,
+
+  inputEmoji,
+  setEmoji,
+
+  inputWebsite,
+  setWebsite,
+
+  inputTelegram,
+  setTelegram,
+
+  inputTwitter,
+  setTwitter,
 };
 
 export async function executeStep(

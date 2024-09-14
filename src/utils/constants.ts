@@ -42,6 +42,8 @@ export const trendingIcons = [
 ];
 export const workchain = 0;
 export const avgGasFees = 0.025;
+export const defaultEmoji = "🟢";
+export const minBuy = 1;
 
 export const trendPrices: { [key: number]: { [key: number]: number } } = {
   1: { 3: 1, 6: 6, 12: 10, 24: 15, 48: 30 },

@@ -33,8 +33,8 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0
       grammy:
-        specifier: ^1.22.4
-        version: 1.22.4
+        specifier: ^1.30.0
+        version: 1.30.0
       grammy-middlewares:
         specifier: ^1.0.11
         version: 1.0.11
@@ -274,8 +274,8 @@ packages:
     resolution: {integrity: sha512-77IE+2Gg0UHa9MNZ8wsculxJpzUDcHTrMg7OLbKoQ8jWKFxX78sdxRBwL+FK3NvHZ15YnXsnxesV43xgbOhteA==}
     engines: {node: '>=12.20.0 || >=14.13.1'}
 
-  '@grammyjs/types@3.6.2':
-    resolution: {integrity: sha512-7OswNRPN72qFUWhysNrY96+5LKBQXgxqw0iNbleYV7G8GB6ZPVdkwFMIZn1Fda2iRKMYT6S6Sxuel0465VGtHQ==}
+  '@grammyjs/types@3.14.0':
+    resolution: {integrity: sha512-uUVikYAiHNU8CvkeQ6YA/QPbMLgTTpFVLp83VkXCs423w6cDsvfdA6bcrQJGUnc/Q6zHQXXZUftXDYl2b/6L4A==}
 
   '@grpc/grpc-js@1.9.13':
     resolution: {integrity: sha512-OEZZu9v9AA+7/tghMDE8o5DAMD5THVnwSqDWuh7PPYO5287rTyqy0xEHT6/e4pbqSrhyLPdQFsam4TwFQVVIIw==}
@@ -1429,8 +1429,8 @@ packages:
   grammy-middlewares@1.0.11:
     resolution: {integrity: sha512-XASAQK25YOHoLKV0G1UEBH07oSc0nFIMltntyBV1BI5C2sEYKfcYkOp0xGt+SFT5EvLAbIHnyOy+riBnARKfhQ==}
 
-  grammy@1.22.4:
-    resolution: {integrity: sha512-7EIdixo4kV/lJWyKswyi5n3AJ2U/2731rPf8a3SKoXQ0tiHdCTvdgc2atdN2b10g8o6wJ2SXTf0xQX3Dqm1buA==}
+  grammy@1.30.0:
+    resolution: {integrity: sha512-uD1kMbgR04qIed4z+eHc68t41ZyzPC3mbHSJD+hQtoTA6RkBSgVxL2HJLmgP7cUjEirlkxHjV6F7Hl7a4Ozvbg==}
     engines: {node: ^12.20.0 || >=14.13.1}
 
   graphemer@1.4.0:
@@ -2837,7 +2837,7 @@ snapshots:
     dependencies:
       abort-controller: 3.0.0
 
-  '@grammyjs/types@3.6.2': {}
+  '@grammyjs/types@3.14.0': {}
 
   '@grpc/grpc-js@1.9.13':
     dependencies:
@@ -4593,14 +4593,14 @@ snapshots:
     dependencies:
       '@grammyjs/runner': 1.0.4
       envalid: 7.3.1
-      grammy: 1.22.4
+      grammy: 1.30.0
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  grammy@1.22.4:
+  grammy@1.30.0:
     dependencies:
-      '@grammyjs/types': 3.6.2
+      '@grammyjs/types': 3.14.0
       abort-controller: 3.0.0
       debug: 4.3.4(supports-color@5.5.0)
       node-fetch: 2.7.0

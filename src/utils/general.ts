@@ -47,3 +47,11 @@ export function getRandomItemFromArray<T>(arr: T[]) {
   const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 }
+
+export function isValidInviteLink(url: string) {
+  return url.startsWith("https://t.me");
+}
+
+export function isValidTwitterLink(url: string) {
+  return url.startsWith("https://x.com") && isValidUrl(url);
+}
