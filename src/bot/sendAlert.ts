@@ -97,7 +97,9 @@ export async function sendAlert(data: BuyData) {
             } on Tron Trending](${TRENDING_CHANNEL})`
           : "";
 
-      const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*
+      const message = `*[${hardCleanUpBotMessage(symbol)}](${
+        telegramLink || dexSLink
+      }) Buy\\!*
 ${emojis}
 
 🔀 ${sentNative} SOL *\\($${sentUsd}\\)*
