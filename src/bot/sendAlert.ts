@@ -94,7 +94,7 @@ export async function sendAlert(data: BuyData) {
         trendingRank !== -1
           ? `[${trendingIcons[trendingRank]} \\#${
               trendingRank + 1
-            } on Tron Trending](${TRENDING_CHANNEL})`
+            } on Hype Solana Trending](${TRENDING_CHANNEL})`
           : "";
 
       const message = `*[${hardCleanUpBotMessage(symbol)}](${

@@ -43,7 +43,7 @@ export async function setTokenAddress(ctx: CommandContext<Context>) {
 
   const firstPair = dexSData?.data?.pairs?.at(0);
   if (!firstPair || !tokenAddress || !isValidSolAddress(tokenAddress)) {
-    return ctx.reply("Please enter a valid Tron token address");
+    return ctx.reply("Please enter a valid Solana token address");
   }
 
   delete userState[chatId];
