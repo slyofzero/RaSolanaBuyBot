@@ -105,9 +105,9 @@ ${emojis}
 
 🔀 ${sentNative} SOL *\\($${sentUsd}\\)*
 🔀 ${formattedAmount} *${hardCleanUpBotMessage(symbol)}*
-🪙 Position ${hardCleanUpBotMessage(position)}
+🪙 Position *${hardCleanUpBotMessage(position)}*
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
-💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(displayFdv)}
+💸 [Market Cap](${dexSLink}) *$${cleanUpBotMessage(displayFdv)}*
 
 [Photon](${photonLink}) ${specialLinksText} [Trending](${TRENDING_CHANNEL}/${trendingMessageId})
 
