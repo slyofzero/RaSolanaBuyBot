@@ -89,6 +89,7 @@ export async function sendAlert(data: BuyData) {
         .filter(([, link]) => link)
         .map(([label, link]) => `[${label}](${link})`)
         .join(" \\| ");
+      const specialLinksText = `\\| ${specialLinks} \\|`;
 
       const trendingPosition =
         trendingRank !== -1
@@ -108,7 +109,7 @@ ${emojis}
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(displayFdv)}
 
-[Photon](${photonLink}) \\| ${specialLinks} \\| [Trending](${trendingLink})
+[Photon](${photonLink}) ${specialLinksText} [Trending](${trendingLink})
 
 ${trendingPosition}`;
 
