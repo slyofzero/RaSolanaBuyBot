@@ -89,7 +89,7 @@ export async function sendAlert(data: BuyData) {
         .filter(([, link]) => link)
         .map(([label, link]) => `[${label}](${link})`)
         .join(" \\| ");
-      const specialLinksText = `\\| ${specialLinks} \\|`;
+      const specialLinksText = specialLinks ? `\\| ${specialLinks} \\|` : "\\|";
 
       const trendingPosition =
         trendingRank !== -1
