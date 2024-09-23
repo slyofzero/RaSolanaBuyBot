@@ -12,6 +12,7 @@ import { TRENDING_CHANNEL } from "@/utils/env";
 import { trendingIcons } from "@/utils/constants";
 import { getRandomNumber } from "@/utils/general";
 import { StoredGroup } from "@/types";
+import { trendingMessageId } from "@/vars/message";
 
 export interface BuyData {
   buyer: string;
@@ -69,7 +70,6 @@ export async function sendAlert(data: BuyData) {
     const buyerLink = `https://solscan.io/account/${buyer}`;
     const txnLink = `https://solscan.io/tx/${signature}`;
     const dexSLink = `https://dexscreener.com/solana/${token}`;
-    const trendingLink = `https://t.me/c/2125443386/2`;
     const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
     const trendingRank = Object.entries(trendingTokens).findIndex(
       ([trendingToken]) => trendingToken === token
@@ -109,7 +109,7 @@ ${emojis}
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(displayFdv)}
 
-[Photon](${photonLink}) ${specialLinksText} [Trending](${trendingLink})
+[Photon](${photonLink}) ${specialLinksText} [Trending](${TRENDING_CHANNEL}/${trendingMessageId})
 
 ${trendingPosition}`;
 
