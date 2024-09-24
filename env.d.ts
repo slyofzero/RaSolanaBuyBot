@@ -11,6 +11,7 @@ declare global {
       ENCRYPTION_KEY: string | undefined;
       FIREBASE_KEY: string | undefined;
       GYSER_WSS_URL: string | undefined;
+      LOG_CHANNEL_ID: string | undefined;
     }
   }
 }

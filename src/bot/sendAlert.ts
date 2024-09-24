@@ -124,7 +124,7 @@ ${trendingPosition}`;
 
       try {
         if (group.media) {
-          if (mediaType === "gif") {
+          if (mediaType === "video") {
             await teleBot.api.sendAnimation(group.chatId, group.media, {
               parse_mode: "MarkdownV2",
               // @ts-expect-error Type not found

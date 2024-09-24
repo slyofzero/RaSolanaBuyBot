@@ -5,7 +5,7 @@ export interface StoredGroup {
   id?: string;
   emoji?: string | null;
   media?: string | null;
-  mediaType?: "video" | "photo" | "gif" | null;
+  mediaType?: "video" | "photo" | null;
   minBuy?: number;
   websiteLink?: string;
   telegramLink?: string;
