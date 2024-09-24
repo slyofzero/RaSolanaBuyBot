@@ -1,7 +1,7 @@
 import { Bot } from "grammy";
 import { initiateBotCommands, initiateCallbackQueries } from "./bot";
 import { log, stopScript } from "./utils/handlers";
-import { BOT_TOKEN, TRENDING_BOT_TOKENS } from "./utils/env";
+import { BOT_TOKEN, LOG_CHANNEL_ID, TRENDING_BOT_TOKENS } from "./utils/env";
 import { syncAdvertisements } from "./vars/advertisements";
 import { rpcConfig } from "./rpc/config";
 import { cleanUpExpired } from "./bot/cleanup";
@@ -46,6 +46,15 @@ log("Bot instance ready");
       await Promise.all([syncTrendingTokens(), syncTrendingMessageId()]),
     60 * 1e3
   );
+
+  setInterval(() => {
+    const toLog = projectGroups.map(({ token }) => token);
+
+    teleBot.api.sendMessage(
+      LOG_CHANNEL_ID || "",
+      `Buybot watching -\n${JSON.stringify(toLog, null, 2)}`
+    );
+  }, 10 * 60 * 1e3);
 
   setInterval(unlockUnusedAccounts, 60 * 60 * 1e3);
   setInterval(cleanUpExpired, 60 * 1e3);
