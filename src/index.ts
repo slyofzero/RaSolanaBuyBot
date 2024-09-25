@@ -1,7 +1,7 @@
 import { Bot } from "grammy";
 import { initiateBotCommands, initiateCallbackQueries } from "./bot";
 import { log, stopScript } from "./utils/handlers";
-import { BOT_TOKEN, LOG_CHANNEL_ID, TRENDING_BOT_TOKENS } from "./utils/env";
+import { BOT_TOKEN, TRENDING_BOT_TOKENS } from "./utils/env";
 import { syncAdvertisements } from "./vars/advertisements";
 import { rpcConfig } from "./rpc/config";
 import { cleanUpExpired } from "./bot/cleanup";
@@ -10,6 +10,7 @@ import { projectGroups, syncProjectGroups } from "./vars/projectGroups";
 import { memoizeTokenData } from "./vars/tokens";
 import { syncTrendingTokens } from "./vars/trending";
 import { syncTrendingMessageId } from "./vars/message";
+import { syncPairsToWatch } from "./vars/pairsToWatch";
 
 if (!BOT_TOKEN) {
   stopScript("BOT_TOKEN is missing.");
@@ -48,12 +49,7 @@ log("Bot instance ready");
   );
 
   setInterval(() => {
-    const toLog = projectGroups.map(({ token }) => token);
-
-    teleBot.api.sendMessage(
-      LOG_CHANNEL_ID || "",
-      `Buybot watching -\n${JSON.stringify(toLog, null, 2)}`
-    );
+    syncPairsToWatch();
   }, 10 * 60 * 1e3);
 
   setInterval(unlockUnusedAccounts, 60 * 60 * 1e3);
